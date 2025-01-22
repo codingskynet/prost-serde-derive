@@ -70,10 +70,10 @@ macro_rules! serde_test {
                 $json
             );
 
-            let mesage = $value;
+            let message = $value;
             assert_eq!(
-                tests::util::round_trip_from_message(mesage.clone(), false),
-                mesage
+                tests::util::round_trip_from_message(message.clone(), false),
+                message
             );
         }
 
@@ -84,10 +84,10 @@ macro_rules! serde_test {
                 tests::util::drop_null($json)
             );
 
-            let mesage = $value;
+            let message = $value;
             assert_eq!(
-                tests::util::round_trip_from_message(mesage.clone(), true),
-                mesage
+                tests::util::round_trip_from_message(message.clone(), true),
+                message
             );
         }
     };

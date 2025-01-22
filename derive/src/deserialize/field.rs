@@ -37,7 +37,7 @@ impl<'a> FieldVisitorTokenGenerator<'a> {
 
     fn get_none_value_getter_expr(&self, prost_attr: &ProstAttr) -> Result<TokenStream, ()> {
         let serde = self.serde;
-        let defaut_value = prost_attr.get_default_value();
+        let default_value = prost_attr.get_default_value();
 
         match prost_attr.ty {
             ProtobufType::Enumeration(ref path) => Ok(self.value_getter(
@@ -48,7 +48,7 @@ impl<'a> FieldVisitorTokenGenerator<'a> {
                         None => return Err(#serde::de::Error::unknown_variant(&value, &[])),
                     })
                 },
-                defaut_value,
+                default_value,
             )),
             ProtobufType::Bytes(_) => Ok(self.value_getter(
                 Some(quote! { String }),
@@ -61,7 +61,7 @@ impl<'a> FieldVisitorTokenGenerator<'a> {
                         }
                     })
                 },
-                defaut_value,
+                default_value,
             )),
             ProtobufType::OneOf(_) => {
                 let serde = self.serde;
@@ -86,13 +86,13 @@ impl<'a> FieldVisitorTokenGenerator<'a> {
                             )?
                         )
                     },
-                    defaut_value,
+                    default_value,
                 ))
             },
             _ => Ok(self.value_getter(
                 None,
                 quote! { Some(value) },
-                defaut_value,
+                default_value,
             )),
         }
     }
