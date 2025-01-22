@@ -101,13 +101,13 @@ impl DeriveMeta {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum ProstBytesType {
     Bytes,
     Vec,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum ProtobufType {
     Message,
     Enumeration(Path),
@@ -168,6 +168,7 @@ impl TryFrom<&Meta> for ProtobufType {
                     "uint64" => Ok(ProtobufType::Uint64),
                     "float" => Ok(ProtobufType::Float),
                     "double" => Ok(ProtobufType::Double),
+                    "bytes" => Ok(ProtobufType::Bytes(ProstBytesType::Vec)),
                     _ => Err(into_syn_error(ident, "unrecognized type")),
                 }
             }
@@ -269,7 +270,7 @@ impl ProstAttr {
         let mut modifier = None;
         let mut tag = None;
 
-        for meta in meta_args {
+        for meta in meta_args.clone() {
             if let Ok(t) = ProtobufType::try_from(&meta) {
                 set_option_or_err(&mut ty, meta, t)?;
             } else if let Ok(m) = FieldModifier::try_from(&meta) {
